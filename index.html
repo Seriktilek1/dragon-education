@@ -139,12 +139,37 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 
 /* Stories */
 .stories{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
-.story{display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;width:112px}
+.story{display:flex;flex-direction:column;align-items:center;gap:12px;width:112px;background:none;border:0;padding:0;cursor:pointer;color:var(--cream)}
 .ring{width:100px;height:100px;border-radius:50%;padding:3px;background:conic-gradient(from 210deg,var(--red),var(--gold),var(--blush),var(--red));transition:transform .25s}
 .story:hover .ring{transform:scale(1.06)}
-.ring div{width:100%;height:100%;border-radius:50%;border:3px solid var(--ink-2);background:radial-gradient(circle at 50% 35%,#fbe3df,var(--blush));display:grid;place-items:center;text-align:center;color:#b6555a;font:700 12.5px/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;padding:10px}
-.ring .h{font:900 26px/1 var(--f-han);letter-spacing:0}
-.story span{font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.ring div{position:relative;width:100%;height:100%;border-radius:50%;border:3px solid var(--ink-2);background:radial-gradient(circle at 50% 35%,#fdeeea,var(--blush));display:grid;place-items:center;overflow:hidden}
+.ring img{position:absolute;inset:6%;width:88%;height:88%;border-radius:50%;object-fit:cover;filter:grayscale(1) contrast(1.1);mix-blend-mode:multiply;opacity:.14}
+.ring b{position:relative;font:900 34px/1 var(--f-han);color:#b6454b}
+.ring b.two{font-size:24px}
+.story span{font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.3}
+
+/* Story viewer */
+body.sv-lock{overflow:hidden}
+.sv{position:fixed;inset:0;z-index:300;background:rgba(5,7,9,.94);display:grid;place-items:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.sv-box{position:relative;width:min(420px,100%);height:min(780px,100%);aspect-ratio:9/16;max-width:100%;border-radius:18px;overflow:hidden;background:var(--ink-2);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.sv-bars{position:absolute;top:10px;left:10px;right:10px;z-index:3;display:flex;gap:4px}
+.sv-bars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.3);overflow:hidden}
+.sv-bars b{display:block;height:100%;background:#fff}
+.sv-head{position:absolute;top:22px;left:12px;right:12px;z-index:3;display:flex;align-items:center;gap:10px;color:#fff}
+.sv-head img{width:32px;height:32px;border-radius:50%}
+.sv-head b{font-size:14px}
+.sv-head small{font-size:12px;opacity:.7}
+.sv-x{margin-left:auto;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.35);color:#fff;font-size:24px;line-height:1;cursor:pointer}
+.sv-media{position:absolute;inset:0}
+.sv-photo,.sv-yt{width:100%;height:100%;object-fit:cover;border:0;display:block}
+.sv-card{width:100%;height:100%;display:grid;place-items:center}
+.sv-g{font:900 min(44vw,190px)/1 var(--f-han);color:rgba(255,255,255,.9);text-shadow:0 10px 40px rgba(0,0,0,.4);margin-bottom:30%}
+.sv-nav{position:absolute;top:70px;bottom:120px;width:35%;z-index:2;background:none;border:0;cursor:pointer}
+.sv-prev{left:0}.sv-next{right:0}
+.sv-cap{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:60px 20px 22px;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);color:#fff;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.sv-cap h3{font-size:28px}
+.sv-cap p{font-size:15px;color:#eee;line-height:1.5}
+
 
 /* Partners */
 .partners{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
@@ -716,6 +741,37 @@ const FAQ = [
   ['Кто преподаёт на онлайн-курсах?', 'Преподаватели — носители китайского языка.']
 ];
 
+/* ===== Истории (как в Instagram) =====
+   Типы слайдов:
+   {type:'card', glyph, hue, title, text, cta:{label, href}} — оформленная карточка
+   {type:'photo', url:'фото.jpg', text:'подпись'} — своё фото (положите файл рядом с index.html)
+   {type:'youtube', url:'https://youtu.be/…', text:'подпись'} — видео с YouTube
+   Сейчас это прототип: карточки сделаны по вашим постам. Замените их своими фото и видео. */
+const STORIES = [
+  { key: 'unis', label: 'Вузы', cover: '学', items: [
+    { type: 'card', glyph: '华', hue: 352, title: 'Пекинский колледж языка и культуры', text: 'BLCC · Пекин. Семестр или год китайского. Принимаем с 15–16 лет.', cta: { label: 'Подробнее', href: '#university-blcc' } },
+    { type: 'card', glyph: '语', hue: 18, title: 'BLCU — Пекинский университет языка', text: 'Языковой год, Foundation и бакалавриат по китайской филологии.', cta: { label: 'Подробнее', href: '#university-blcu' } },
+    { type: 'card', glyph: '复', hue: 210, title: 'Фудань · Шанхай', text: 'MBA, экономика и медицина в деловой столице Китая.', cta: { label: 'Подробнее', href: '#university-fudan' } },
+    { type: 'card', glyph: '海', hue: 195, title: 'Океанологический университет · Циндао', text: 'Языковые курсы и магистратура у моря.', cta: { label: 'Все университеты', href: '#universities' } } ] },
+  { key: 'reviews', label: 'Отзывы', cover: '评', items: [
+    { type: 'card', glyph: '评', hue: 40, title: 'Отзывы наших студентов', text: 'Здесь будут видео-отзывы студентов и родителей. Пока смотрите их в нашем Instagram.', cta: { label: 'Открыть Instagram', href: 'https://www.instagram.com/dragonn_education/' } },
+    { type: 'card', glyph: '谢', hue: 10, title: 'Место для видео-отзыва', text: 'Пришлите ссылку на YouTube — и отзыв появится здесь.', cta: { label: 'Оставить заявку', href: '#apply' } } ] },
+  { key: 'students', label: 'Наши студенты', cover: '生', items: [
+    { type: 'photo', url: 'HERO', text: 'Учись в Китае. Путешествуй. Познавай культуру.' },
+    { type: 'card', glyph: '京', hue: 352, title: 'Наши студенты в Пекине', text: 'Учатся в Пекинском колледже языка и культуры: занятия, кампус и жизнь в столице.', cta: { label: 'Программа в Пекине', href: '#program-blcc-sem' } },
+    { type: 'card', glyph: '友', hue: 160, title: 'Международная среда', text: 'Новые друзья со всего мира, практика языка каждый день.', cta: null } ] },
+  { key: 'intake', label: 'Набор!', cover: '招', items: [
+    { type: 'card', glyph: '招', hue: 352, title: 'Набор на весенний семестр', text: 'Пекин · семестр или год. С нуля, для повышения уровня, подготовка к HSK.', cta: { label: 'Подать заявку', href: '#apply' } },
+    { type: 'card', glyph: '奖', hue: 45, title: 'Гранты и стипендии', text: 'В приоритете — программы с бесплатным обучением и проживанием.', cta: { label: 'Программы', href: '#study' } },
+    { type: 'card', glyph: '营', hue: 195, title: 'Лагерь в Циндао', text: 'Китайский там, где на нём говорят каждый день. Количество мест ограничено.', cta: { label: 'Лагеря', href: '#camps' } } ] },
+  { key: 'unitime', label: 'UniTime', cover: '校', items: [
+    { type: 'card', glyph: '校', hue: 280, title: 'Один день студента BLCC', text: 'Утро — занятия китайским. Днём — кампус и столовая. Вечером — Пекин.', cta: { label: 'Читать в блоге', href: '#post-blcc-day' } },
+    { type: 'card', glyph: '茶', hue: 160, title: '10 напитков Китая', text: 'Чай с тапиокой, жасминовый чай, соевое молоко и Luckin Coffee.', cta: { label: 'Читать', href: '#post-drinks' } } ] },
+  { key: 'chinese', label: 'Курсы языка', cover: '汉语', items: [
+    { type: 'card', glyph: '汉', hue: 352, title: 'Китайский онлайн', text: 'Уроки с преподавателями — носителями языка. С нуля и до HSK 6.', cta: { label: 'Курсы', href: '#program-cn-zero' } },
+    { type: 'card', glyph: '考', hue: 40, title: 'Зачем нужен HSK', text: 'HSK — главное требование вузов и стипендий. Начните готовиться заранее.', cta: { label: 'Подготовка к HSK', href: '#program-hsk' } } ] }
+];
+
 /* ===== Site ===== */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -858,8 +914,8 @@ function pHome() {
 
   <section class="sec"><div class="wrap">
     <div class="sec-head" style="justify-content:center;text-align:center"><div><span class="eyebrow">Отзывы · Instagram</span><h2>Отзывы и истории наших студентов</h2></div></div>
-    <div class="stories">${[['Вузы', 'Вузы'], ['Отзывы', 'Отзывы'], ['Наши студенты', 'Наши студенты'], ['Набор студентов', 'Набор!'], ['University time', 'UniTime'], ['<span class="h">汉语</span>', 'Курсы языка']].map(s => `<a class="story" href="${CONTACTS.instagram}" target="_blank" rel="noopener"><div class="ring"><div>${s[0]}</div></div><span>${s[1]}</span></a>`).join('')}</div>
-    <p class="note" style="text-align:center;margin-top:22px">Видео-отзывы студентов и родителей — в актуальных историях нашего Instagram.</p>
+    <div class="stories">${STORIES.map(st => `<button class="story" type="button" data-story="${st.key}"><div class="ring"><div><img src="${LOGO}" alt=""><b class="${st.cover.length > 1 ? 'two' : ''}">${st.cover}</b></div></div><span>${st.label}</span></button>`).join('')}</div>
+    <p class="note" style="text-align:center;margin-top:22px">Нажмите на кружок, чтобы открыть истории.</p>
   </div></section>
 
   <section class="sec tight"><div class="wrap faq-grid">
@@ -1216,6 +1272,58 @@ document.addEventListener('input', e => {
   fT = setTimeout(() => { render(); const n = document.getElementById(id); if (n && n.tagName === 'INPUT') { n.focus(); try { n.setSelectionRange(pos, pos); } catch (x) {} } }, el.tagName === 'INPUT' ? 220 : 0);
 });
 document.addEventListener('submit', e => { if (e.target.id === 'applyForm') { e.preventDefault(); submitApply(e.target); } });
+
+/* ---------- Story viewer ---------- */
+const SV = { st: null, i: 0, timer: null, t0: 0, dur: 6000, paused: false };
+function ytId(u) { try { const x = new URL(u); if (x.hostname.includes('youtu.be')) return x.pathname.slice(1); if (x.searchParams.get('v')) return x.searchParams.get('v'); const m = x.pathname.match(/\/(shorts|embed)\/([^/]+)/); return m ? m[2] : ''; } catch (e) { return u; } }
+function svOpen(key) {
+  SV.st = STORIES.find(s => s.key === key); if (!SV.st) return; SV.i = 0;
+  let el = document.getElementById('sv');
+  if (!el) { el = document.createElement('div'); el.id = 'sv'; el.className = 'sv'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); document.body.appendChild(el); }
+  document.body.classList.add('sv-lock'); svRender();
+}
+function svClose() { clearInterval(SV.timer); const el = document.getElementById('sv'); if (el) el.remove(); document.body.classList.remove('sv-lock'); SV.st = null; }
+function svGo(d) {
+  const n = SV.i + d;
+  if (n < 0) { SV.i = 0; svRender(); return; }
+  if (n >= SV.st.items.length) { const k = STORIES.indexOf(SV.st); if (k < STORIES.length - 1) { SV.st = STORIES[k + 1]; SV.i = 0; svRender(); } else svClose(); return; }
+  SV.i = n; svRender();
+}
+function svRender() {
+  const st = SV.st, it = st.items[SV.i], el = document.getElementById('sv');
+  let media = '';
+  if (it.type === 'photo') media = `<img class="sv-photo" src="${it.url === 'HERO' ? HERO : esc(it.url)}" alt="">`;
+  else if (it.type === 'youtube') media = `<iframe class="sv-yt" src="https://www.youtube.com/embed/${encodeURIComponent(ytId(it.url))}?autoplay=1&mute=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Видео"></iframe>`;
+  else media = `<div class="sv-card" style="background:linear-gradient(160deg,hsl(${it.hue} 55% 30%) 0%,hsl(${(it.hue + 25) % 360} 50% 16%) 60%,#0b0f12 100%)"><span class="sv-g">${esc(it.glyph)}</span></div>`;
+  const text = it.type === 'card' ? `<h3>${esc(it.title)}</h3><p>${esc(it.text)}</p>` : (it.text ? `<p>${esc(it.text)}</p>` : '');
+  el.innerHTML = `<div class="sv-box">
+    <div class="sv-bars">${st.items.map((_, i) => `<i><b style="width:${i < SV.i ? 100 : 0}%" ${i === SV.i ? 'id="svbar"' : ''}></b></i>`).join('')}</div>
+    <div class="sv-head"><img src="${LOGO}" alt=""><b>${esc(st.label)}</b><small>dragonn_education</small><button class="sv-x" data-svx aria-label="Закрыть">×</button></div>
+    <div class="sv-media">${media}</div>
+    <button class="sv-nav sv-prev" data-svgo="-1" aria-label="Назад"></button><button class="sv-nav sv-next" data-svgo="1" aria-label="Дальше"></button>
+    <div class="sv-cap">${text}${it.cta ? `<a class="btn btn-red btn-sm" href="${esc(it.cta.href)}" ${it.cta.href.startsWith('http') ? 'target="_blank" rel="noopener"' : 'data-svlink'}>${esc(it.cta.label)}</a>` : ''}</div>
+  </div>`;
+  clearInterval(SV.timer);
+  if (it.type === 'youtube') { const b = document.getElementById('svbar'); if (b) b.style.width = '100%'; return; }
+  SV.t0 = Date.now();
+  SV.timer = setInterval(() => {
+    if (SV.paused) { SV.t0 += 100; return; }
+    const p = Math.min(1, (Date.now() - SV.t0) / SV.dur); const b = document.getElementById('svbar'); if (b) b.style.width = p * 100 + '%';
+    if (p >= 1) svGo(1);
+  }, 100);
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-story],[data-svx],[data-svgo],[data-svlink]');
+  if (!b) { if (e.target.id === 'sv') svClose(); return; }
+  if (b.dataset.story) svOpen(b.dataset.story);
+  else if (b.hasAttribute('data-svx')) svClose();
+  else if (b.dataset.svgo) svGo(+b.dataset.svgo);
+  else if (b.hasAttribute('data-svlink')) svClose();
+});
+document.addEventListener('keydown', e => { if (!SV.st) return; if (e.key === 'Escape') svClose(); if (e.key === 'ArrowRight') svGo(1); if (e.key === 'ArrowLeft') svGo(-1); });
+let svX = 0;
+document.addEventListener('touchstart', e => { if (SV.st) { svX = e.changedTouches[0].screenX; SV.paused = true; } }, { passive: true });
+document.addEventListener('touchend', e => { if (!SV.st) return; SV.paused = false; const dx = e.changedTouches[0].screenX - svX; if (Math.abs(dx) > 50) svGo(dx < 0 ? 1 : -1); }, { passive: true });
 
 render();
 </script>
