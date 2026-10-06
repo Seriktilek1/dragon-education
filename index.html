@@ -430,6 +430,27 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:900px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
+
+/* Photograph covers for the six story highlights */
+
+.story .ring div{background:#4a4544;border:3px solid var(--ink-2)}
+.story .ring img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%;filter:none;mix-blend-mode:normal;opacity:1;z-index:1;transition:transform .3s}
+.story:hover .ring img{transform:scale(1.08)}
+.story .ring b{position:relative;z-index:0}
+
+
+/* Full-height photo stories with legible captions */
+.sv-media{background:linear-gradient(150deg,#665451,#36504d)}
+.sv-media::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(20,26,29,.63),transparent 23%,transparent 46%,rgba(20,26,29,.3))}
+.sv-photo{position:relative;z-index:1;filter:saturate(.9)}
+.sv-fallback{position:absolute;inset:0;display:grid;place-items:center;font:700 140px var(--f-han);color:#ebd1ac33}
+.sv-cap{padding:85px 25px 26px;background:linear-gradient(0deg,rgba(24,29,32,.97),rgba(24,29,32,.88) 62%,transparent);gap:12px}
+.sv-cap h3{font-size:33px;line-height:1.08;color:#fff0dc}.sv-cap p{font-size:14px;line-height:1.65;color:#eee7de}
+.sv-photo-note{font-size:9px;letter-spacing:.04em;color:#d5cfc5}
+.sv-head{padding:4px}.sv-head small{font-size:10px}.sv-cap .btn{margin-top:3px}
+@media(max-width:480px){.sv-cap{padding-inline:21px}.sv-cap h3{font-size:30px}}
+@media(max-height:600px){.sv-cap{padding:45px 20px 14px;gap:7px}.sv-cap h3{font-size:24px}.sv-cap p{font-size:12px}.sv-head small{display:none}}
+
 </style>
 <div id="app"></div>
 <script>
@@ -747,6 +768,8 @@ const FAQ = [
    {type:'photo', url:'фото.jpg', text:'подпись'} — своё фото (положите файл рядом с index.html)
    {type:'youtube', url:'https://youtu.be/…', text:'подпись'} — видео с YouTube
    Сейчас это прототип: карточки сделаны по вашим постам. Замените их своими фото и видео. */
+const STORY_PHOTOS = {"unis": {"id": "1562774053-701939374585", "alt": "Университетский кампус", "source": "https://unsplash.com/photos/U0dBV_QeiYk", "author": "Michael Marsh", "url": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=240&h=240&q=85"}, "reviews": {"id": "1758270704840-0ac001215b55", "alt": "Студенты общаются после занятий", "source": "https://unsplash.com/photos/students-talking-in-a-lecture-hall-during-class-9faEJgSvmjc", "author": "Vitaly Gariev", "url": "https://images.unsplash.com/photo-1758270704840-0ac001215b55?auto=format&fit=crop&w=240&h=240&q=85"}, "students": {"id": "1523240795612-9a054b0db644", "alt": "Студенты занимаются вместе", "source": "https://images.unsplash.com/photo-1523240795612-9a054b0db644", "author": "Priscilla Du Preez", "url": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=240&h=240&q=85"}, "intake": {"id": "1748376976286-0b9cdc0bef22", "alt": "Выпускницы университета", "source": "https://unsplash.com/photos/two-women-pose-for-a-graduation-photo-YOwIHYEorSE", "author": "Nathan B", "url": "https://images.unsplash.com/photo-1748376976286-0b9cdc0bef22?auto=format&fit=crop&w=240&h=240&q=85"}, "unitime": {"id": "1741699428220-65f37f3fbbcb", "alt": "Занятия в университетской библиотеке", "source": "https://unsplash.com/photos/student-studies-at-a-library-with-books-klbApl9mxr0", "author": "Zoshua Colah", "url": "https://images.unsplash.com/photo-1741699428220-65f37f3fbbcb?auto=format&fit=crop&w=240&h=240&q=85"}, "chinese": {"id": "1546638008-efbe0b62c730", "alt": "Занятие китайской каллиграфией", "source": "https://unsplash.com/photos/person-doing-kanji-calligraphy-zHwWnUDMizo", "author": "Marco Zuppone", "url": "https://images.unsplash.com/photo-1546638008-efbe0b62c730?auto=format&fit=crop&w=240&h=240&q=85"}};
+
 const STORIES = [
   { key: 'unis', label: 'Вузы', cover: '学', items: [
     { type: 'card', glyph: '华', hue: 352, title: 'Пекинский колледж языка и культуры', text: 'BLCC · Пекин. Семестр или год китайского. Принимаем с 15–16 лет.', cta: { label: 'Подробнее', href: '#university-blcc' } },
@@ -771,6 +794,27 @@ const STORIES = [
     { type: 'card', glyph: '汉', hue: 352, title: 'Китайский онлайн', text: 'Уроки с преподавателями — носителями языка. С нуля и до HSK 6.', cta: { label: 'Курсы', href: '#program-cn-zero' } },
     { type: 'card', glyph: '考', hue: 40, title: 'Зачем нужен HSK', text: 'HSK — главное требование вузов и стипендий. Начните готовиться заранее.', cta: { label: 'Подготовка к HSK', href: '#program-hsk' } } ] }
 ];
+
+/* Illustrative photographs inside every story. Keep existing copy and actions. */
+const STORY_EXTRA_PHOTOS = {"beijing": {"id": "1577271783546-254bf0670904", "alt": "Архитектура Пекина", "author": "Bao Menglong", "source": "https://unsplash.com/photos/pathway-leading-to-an-archway-G0Q1KRchc3U"}, "shanghai": {"id": "1752662742861-fb76c71576d7", "alt": "Панорама Шанхая", "author": "Nicolas Jehly", "source": "https://unsplash.com/photos/shanghai-skyline-on-a-cloudy-day-0p37Ch2LYQc"}, "qingdao": {"id": "1689143626749-3c2ab3ebca45", "alt": "Побережье Циндао", "author": "Clark Ma", "source": "https://unsplash.com/photos/a-view-of-a-city-and-a-body-of-water-QgryO77mgHs"}, "tea": {"id": "1711380586172-5c6432238071", "alt": "Китайский чай на деревянном столе", "author": "Jason Yuen", "source": "https://unsplash.com/photos/a-cup-of-tea-sits-on-a-table-lQwzl0BGO7Y"}};
+const STORY_SLIDE_PHOTOS = {
+  unis: ['beijing', 'chinese', 'shanghai', 'qingdao'],
+  reviews: ['reviews', 'students'],
+  students: ['students', 'beijing', 'reviews'],
+  intake: ['beijing', 'intake', 'qingdao'],
+  unitime: ['unitime', 'tea'],
+  chinese: ['chinese', 'unitime']
+};
+STORIES.forEach(st => st.items.forEach((it, i) => {
+  if (it.type === 'youtube') return;
+  const key = STORY_SLIDE_PHOTOS[st.key]?.[i] || st.key;
+  const photo = STORY_EXTRA_PHOTOS[key] || STORY_PHOTOS[key];
+  if (!photo) return;
+  it.type = 'photo';
+  it.url = 'https://images.unsplash.com/photo-' + photo.id + '?auto=format&fit=crop&w=1080&h=1700&q=85';
+  it.alt = photo.alt;
+  it.illustrative = true;
+}));
 
 /* ===== Site ===== */
 const $ = (s, r = document) => r.querySelector(s);
@@ -914,8 +958,8 @@ function pHome() {
 
   <section class="sec"><div class="wrap">
     <div class="sec-head" style="justify-content:center;text-align:center"><div><span class="eyebrow">Отзывы · Instagram</span><h2>Отзывы и истории наших студентов</h2></div></div>
-    <div class="stories">${STORIES.map(st => `<button class="story" type="button" data-story="${st.key}"><div class="ring"><div><img src="${LOGO}" alt=""><b class="${st.cover.length > 1 ? 'two' : ''}">${st.cover}</b></div></div><span>${st.label}</span></button>`).join('')}</div>
-    <p class="note" style="text-align:center;margin-top:22px">Нажмите на кружок, чтобы открыть истории.</p>
+    <div class="stories">${STORIES.map(st => `<button class="story" type="button" data-story="${st.key}"><div class="ring"><div><b aria-hidden="true" class="${st.cover.length > 1 ? 'two' : ''}">${st.cover}</b><img src="${esc(STORY_PHOTOS[st.key].url)}" alt="${esc(STORY_PHOTOS[st.key].alt)}" loading="lazy" decoding="async" width="100" height="100" onerror="this.hidden=true"></div></div><span>${st.label}</span></button>`).join('')}</div>
+    <p class="note" style="text-align:center;margin-top:22px">Нажмите на кружок, чтобы открыть истории. Фото используются как иллюстрации.</p>
   </div></section>
 
   <section class="sec tight"><div class="wrap faq-grid">
@@ -1292,21 +1336,23 @@ function svGo(d) {
 function svRender() {
   const st = SV.st, it = st.items[SV.i], el = document.getElementById('sv');
   let media = '';
-  if (it.type === 'photo') media = `<img class="sv-photo" src="${it.url === 'HERO' ? HERO : esc(it.url)}" alt="">`;
+  if (it.type === 'photo') media = `<span class="sv-fallback" aria-hidden="true">${esc(it.glyph || st.cover)}</span><img id="svActivePhoto" class="sv-photo" src="${it.url === 'HERO' ? HERO : esc(it.url)}" alt="${esc(it.alt || 'Фото истории')}" decoding="async" onerror="this.hidden=true">`;
   else if (it.type === 'youtube') media = `<iframe class="sv-yt" src="https://www.youtube.com/embed/${encodeURIComponent(ytId(it.url))}?autoplay=1&mute=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Видео"></iframe>`;
   else media = `<div class="sv-card" style="background:linear-gradient(160deg,hsl(${it.hue} 55% 30%) 0%,hsl(${(it.hue + 25) % 360} 50% 16%) 60%,#0b0f12 100%)"><span class="sv-g">${esc(it.glyph)}</span></div>`;
-  const text = it.type === 'card' ? `<h3>${esc(it.title)}</h3><p>${esc(it.text)}</p>` : (it.text ? `<p>${esc(it.text)}</p>` : '');
+  const text = `${it.title ? `<h3>${esc(it.title)}</h3>` : ''}${it.text ? `<p>${esc(it.text)}</p>` : ''}`;
   el.innerHTML = `<div class="sv-box">
     <div class="sv-bars">${st.items.map((_, i) => `<i><b style="width:${i < SV.i ? 100 : 0}%" ${i === SV.i ? 'id="svbar"' : ''}></b></i>`).join('')}</div>
     <div class="sv-head"><img src="${LOGO}" alt=""><b>${esc(st.label)}</b><small>dragonn_education</small><button class="sv-x" data-svx aria-label="Закрыть">×</button></div>
     <div class="sv-media">${media}</div>
     <button class="sv-nav sv-prev" data-svgo="-1" aria-label="Назад"></button><button class="sv-nav sv-next" data-svgo="1" aria-label="Дальше"></button>
-    <div class="sv-cap">${text}${it.cta ? `<a class="btn btn-red btn-sm" href="${esc(it.cta.href)}" ${it.cta.href.startsWith('http') ? 'target="_blank" rel="noopener"' : 'data-svlink'}>${esc(it.cta.label)}</a>` : ''}</div>
+    <div class="sv-cap">${it.illustrative ? '<span class="sv-photo-note">Иллюстративное фото · Unsplash</span>' : ''}${text}${it.cta ? `<a class="btn btn-red btn-sm" href="${esc(it.cta.href)}" ${it.cta.href.startsWith('http') ? 'target="_blank" rel="noopener"' : 'data-svlink'}>${esc(it.cta.label)}</a>` : ''}</div>
   </div>`;
   clearInterval(SV.timer);
   if (it.type === 'youtube') { const b = document.getElementById('svbar'); if (b) b.style.width = '100%'; return; }
   SV.t0 = Date.now();
   SV.timer = setInterval(() => {
+    const activePhoto = document.getElementById('svActivePhoto');
+    if (activePhoto && !activePhoto.complete && !activePhoto.hidden) { SV.t0 = Date.now(); return; }
     if (SV.paused) { SV.t0 += 100; return; }
     const p = Math.min(1, (Date.now() - SV.t0) / SV.dur); const b = document.getElementById('svbar'); if (b) b.style.width = p * 100 + '%';
     if (p >= 1) svGo(1);
